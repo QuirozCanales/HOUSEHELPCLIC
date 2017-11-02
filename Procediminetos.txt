@@ -1,0 +1,132 @@
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+Dentro de Clientes :
+*Registrar Usuarios
+
+create procedure NewClient
+(@CodeSpecialty   char(5),
+ @CodeDistrict    char(3),
+ @NameTech        varchar (30),
+ @LastNameTech    varchar (35),
+ @DniTech         char(8),
+ @AgeTech         int,
+ @CellPhoneTech   char(9),
+ @DescriptionTech text,
+ @PhotoTech       text,
+ @PasswordTech    varchar (30))
+as
+declare @CodeTechnician char(10)
+declare @Numero int
+Select @Numero=right(max(CodeTechnician),9)+1 from Technician
+set @CodeTechnician='T'+ right('00000000'+ ltrim (@Numero),9)
+Insert into Technician
+values (@CodeTechnician   ,
+        @CodeSpecialty    ,
+        @CodeDistrict     ,
+        @NameTech         ,
+        @LastNameTech     ,
+        @DniTech          ,
+        @AgeTech          ,
+        @CellPhoneTech    ,
+        @DescriptionTech  ,
+        @PhotoTech        ,
+        @PasswordTech )
+end
+go
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+Dentro de Cotizacion
+*Registrar Cotizacion
+
+create procedure NewQuotation
+(@CodeClient          char(10),
+ @CodeTypeQuotation   char(3) ,
+ @CodeJob             char(3) ,
+ @TitleSubject        varchar(50) ,
+ @DetailSubject       text,
+ @PhotoSubject        text,
+ @VisitCost           Numeric(8,2),
+ @AddressSubject      text,
+ @StartSubject        char(5),
+ @EndSubject          char(5),
+ @DateSubject         datetime,
+ @StateQuotation      varchar(15),
+ @CountAnsweQuotation int )
+as
+declare @CodeQuotation char(10)
+declare @Numero int
+Select @Numero=right(max(CodeQuotation),9)+1 from Quotation
+set @CodeQuotation='Q'+ right('00000000'+ ltrim (@Numero),9)
+Insert into Quotation
+values ( @CodeQuotation      ,
+         @CodeClient         ,
+         @CodeTypeQuotation  ,
+         @CodeJob            ,
+         @TitleSubject       ,
+         @DetailSubject      ,
+         @PhotoSubject       ,
+         @VisitCost          ,
+         @AddressSubject     ,
+         @StartSubject       ,
+         @EndSubject         ,
+         @DateSubject        ,
+         @StateQuotation     ,
+         @CountAnsweQuotation int )
+end
+go
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+Dentro de Contrato
+*Registrar Contrato
+create procedure NewContract
+(@CodeClient        char(10),
+ @CodeTechnician    char(10),
+ @CodeQuotation     char(10),
+ @DateContract      datetime,
+ @TotalCostContract Numeric(8,2),
+ @StateContract     varchar(15),
+ @AssistanceReason  text,
+ @RatingScore       Numeric(2,1),
+ @RatingState       Varchar(15),
+ @RatingCommentary  text )
+as
+declare @CodeContract char(10)
+declare @Numero int
+Select @Numero=right(max(CodeContract),9)+1 from Contract
+set @CodeContract='C'+ right('00000000'+ ltrim (@Numero),9)
+Insert into Contract
+values (
+        @CodeContract      ,
+        @CodeClient        ,
+        @CodeTechnician    ,
+        @CodeQuotation     ,
+        @DateContract      ,
+        @TotalCostContract ,
+        @StateContract     ,
+        @AssistanceReason  ,
+        @RatingScore       ,
+        @RatingState       ,
+        @RatingCommentary  )
+end
+go
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+Comentarios :
+*Para el Registro de Quotation :
+Cuando se Registra los campos tendran por defecto el siguiente dato
+ StateQuotation      ----> Espera
+ CountAnsweQuotation ---->  0
+ PhotoSubject        ----> Ninguno
+        
+*Para el Registro de Contract :
+Cuando se Registra los campos tendran por defecto el siguiente dato
+ StateContract      ----> Espera
+ AssistanceReason   ----> Vacio
+ RatingScore        ---->  0.0
+ RatingState        ----> Espera
+ RatingCommentary   ----> Vacio
+
+*Para el Registro de Client :
+Cuando se Registra los campos tendran por defecto el siguiente dato
+        
+ PhotoTech   ----> Vacio
