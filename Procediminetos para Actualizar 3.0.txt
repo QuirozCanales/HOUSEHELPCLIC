@@ -1,0 +1,97 @@
+Debajo de USUARIOS CLIENTES
+*Actualizar Cliente
+
+Create Procedure UpdateClient
+(
+ @CodeClient       char(10),
+ @CodeDistrict     char(3),
+ @NameClient       varchar(30),
+ @LastNameClient   varchar(35),
+ @AgeClient        int,
+ @CellPhoneClient  char(9),
+ @AddressClient    text,
+ @PasswordClient   varchar(30) )
+as
+begin
+update Client set
+ CodeDistrict      =@CodeDistrict ,
+ NameClient        =@NameClient   ,
+ LastNameClient    =@LastNameClient ,
+ AgeClient         =@AgeClient ,
+ CellPhoneClient   =@CellPhoneClient,
+ AddressClient     =@AddressClient ,
+ PasswordClient     =@PasswordClient 
+
+where CodeClient   =@CodeClient
+end
+go
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+Registrar La Respuesta a una Cotizacion
+Actualizar Contador de Veces Respondidas a la Cotizacion
+
+CreateProcedure NewAnswerQuotation
+(@CodeTechnician char(10),
+ @CodeQuotation   char(10),
+ @CodeClient     char(10),
+ @DateAnswer     datetime,
+ @CommentAnswer  text,
+ @PriceAnswe     Numeric(8,2) )
+as
+declare @CodeAnswer char(10)
+declare @Numero int
+Select @Numero=right(max(CodeAnswer),9)+1 from Answer
+set @CodeAnswer='A'+ right('00000000'+ ltrim (@Numero),9)
+Insert into Answer
+values(
+ @CodeAnswer     ,
+ @CodeTechnician ,
+ @CodeSchedule   ,
+ @CodeClient     ,
+ @DateAnswer     ,
+ @CommentAnswer  ,
+ @PriceAnswe     )
+Update Quotation set CountAnswerQuotation = CountAnswerQuotation + 1
+where CodeQuotation=@CodeQuotation
+end 
+go
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+Para Registrar una Respuesta al Contrato
+
+Create Procedure GiveAnswerContract
+(@CodeContract     char(10),
+ @AssistanceReason text )
+as
+begin
+update Contract set
+       AssistanceReason  = @AssistanceReason ,
+       StateContract = 'ANSWERED'
+where CodeContract = @CodeContract
+end
+go
+
+--------------------------------------------------------------
+-------------------------------------------------------------------
+Para Registrar una Calificacion al Contrato
+
+Create Procedure GiveRatingContract
+(@CodeContract     char (10),
+ @RatingScore      Numeric(2,1),
+ @RatingCommentary text )
+as
+begin
+update Contract set
+       RatingScore = @RatingScore ,
+       RatingCommentary = @RatingCommentary,
+       RatingState = 'QUALIFIED'
+where CodeContract = @CodeContract
+end
+go
+
+
+
+
+
+

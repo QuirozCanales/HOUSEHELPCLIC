@@ -1,0 +1,260 @@
+*Para Consultar_Cotizacion_x_Tipo
+
+Create procedure ConsultQuotation_x_Type
+(@CodeTypeQuotation char(3) ,
+ @CodeClient char(10) )
+as
+begin
+select q.CodeQuotation , q.TitleSubject , j.NameJob , q.CountAnswerQuotation
+     from Quotation q
+     inner join Job j    on q.CodeJob= j.CodeJob
+where q.CodeClient=@CodeClient and
+      q.CodeTypeQuotation= @odeTypeQuotation and
+      q.StateQuotation='WAIT'
+order by q.CodeQuotation desc
+end
+go
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+*Para consultar Respuesta_x_Cotizacion
+
+Create procedure ConsultAnswer_x_Quotation
+(@CodeQuotation char(10),
+ @CodeClient char (10) )
+as
+begin
+select  a.CodeQuotation ,t.CodeTechnician,  t.NameTech , t.LastNameTech , t.AgeTech
+       from Answer a 
+       inner join Technician t on a.CodeTechnician= t.CodeTechnician 
+       inner join Quotation q on a.CodeQuotation = q.CodeQuotation
+       
+where a.CodeClient = @CodeClient and
+      a.CodeQuotation = @CodeQuotation and
+      q.StateQuotation='WAIT'
+order by t.NameTech asc
+end
+go
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+*Para Mostrar la Cotizacion Seleccionada Parte 1
+
+Create procedure ShowQuotationPart1
+(@CodeQuotation char (10))
+as
+begin 
+select q.CodeQuotation , t.NameTypeQ ,
+      q.TitleSubject ,q.DetailSubject , q.VisitCost, q.AddressSubject ,
+      q.StartSubject ,q.EndSubject ,q.Date Subject ,q.CountAnswerQuotation
+from Quotation q      inner join TypeQuotation t 
+on t.CodeTypeQuotation = q.CodeTypeQuotation
+where q.CodeQuotation=@CodeQuotation
+end go
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+*Para Mostrar los datos del Tecnico para la Cotizacion  Part 2
+
+Create procedure ShowTechnicianPart2
+(@CodeTechnician char(10))
+as
+begin
+select t.NameTech , t.LastNameTech , t.DniTech , t.AgeTech , t.CellPhoneTech
+       t.NameDistrict , j.NameJob 
+from   Technician t inner join District d
+       on t.CodeDistrict = d.CodeDistrict
+inner join Especialty e
+       on t.CodeSpecialty = e. CodeSpecialty
+inner join Job j
+       on e.CodeJob = j.CodeJob
+
+where t.CodeTechnician = @CodeTechnician
+end
+go
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+*Para la Mostrar la Respuesta de Cotizacion especificada por Tecnico Part 3
+
+Create Procedure ConsultAnswer_x_Technician
+(@CodeClient char(10),
+ @CodeQuotation char(10),
+ @CodeTechnician char(10))
+as
+begin
+select CodeAnswer , DateAnswer , CommentAnswer , PriceAnswer
+from Answer
+where CodeTechnician= @CodeTechnician,
+      CodeQuotation=@CodeQuotation,
+      CodeClient = @CodeClient
+order by CodeAnswer asc
+end
+go
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+*Para Mostrar los Datos del Cliente (En las Operaciones)
+
+Create procedure ShowClient
+(@CodeClient char(10))
+as
+begin
+select NameClient ,LastNameClient , AgeClient ,CellPhoneClient ,
+       AddressClient
+from Client
+where CodeClient=@CodeClient
+end
+go
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+*Buscar al Tecnico por Categorias (Especialidades - Oficios- Distrito)
+
+Create Procedure ConsultTechnician1
+(@CodeSpecialty char(5) ,
+ @CodeDistrict char(3))
+as
+begin
+select t.CodeTechnician , t.NameTech , t.LastNameTech , t.AgeTech
+from Technician t inner join District d
+      on t.CodeDistrict = d.CodeDistrict
+inner join Especialty e
+      on t.CodeSpecialty= e.CodeSpecialty
+where t.CodeSpecialty=@CodeSpecialty and
+      t.CodeDistrict=@CodeDistrict
+order by t.CodeTechnician asc
+end
+go
+-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+*Buscar al Tecnico por Codigo
+
+Create Procedure ConsultTechnician2
+(@CodeTechnician char(10))
+as
+begin
+select t.CodeTechnician , t.NameTech , t.LastNameTech , t.AgeTech
+       d.NameDistrict , j.NameJob
+from Technician t inner join District d
+      on t.CodeDistrict = d.CodeDistrict
+inner join Especialty e
+      on t.CodeSpecialty= e.CodeSpecialty
+inner join Job j
+      on j.CodeJob=e.CodeJob
+where t.CodeTechnician=@CodeTechnician
+
+end
+go
+
+-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+* Mostrar Datos del Tecnico ... Depues de Haberlo Buscado Especificamente
+
+Create procedure ShowTechnicianForContract
+(@CodeTechnician char(10))
+as
+begin
+select t.NameTech , t.LastNameTech , t.DniTech , t.AgeTech , t.CellPhoneTech
+       t.NameDistrict , j.NameJob 
+from   Technician t inner join District d
+       on t.CodeDistrict = d.CodeDistrict
+inner join Especialty e
+       on t.CodeSpecialty = e. CodeSpecialty
+inner join Job j
+       on e.CodeJob = j.CodeJob
+
+where t.CodeTechnician = @CodeTechnician
+end
+go
+-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+* Mostrando la Rutina de Horario (En Mañana- Tarde - Noche)
+                                  (Lunes - Martes - Miercoles - Jueves - Viernes -etc)
+
+Select CodeSchedule , FrequencySchedule , DaysSchedule
+from Schedule
+end
+go
+-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+*Mostrar los Horarios de los Tecnicos_x_Rutina
+
+Create procedure ShowDetailScheduleForContract
+(@CodeTechnician char(10),
+ @CodeSchedule char(10))
+as
+begin
+select CodeDetailSchedule , StartSchedule , EndSchedule
+from DetailSchedule
+where CodeTechnician= @CodeTechnician and
+      CodeSchedule = @CodeSchedule
+end
+go
+
+-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+* En Listar las Cotizaciones que no han sido Usadas
+y provienen del cliente y el tecnnico seleccionado
+
+Create procedure ListQuotation_x_ClientTechnician
+(@CodeTechnician char(10),
+ @CodeClient char(10))
+as
+begin
+select q.CodeQuotation , a.CodeAnswer , a.PriceAnswer
+      from Quotation q
+inner join Answer a   on a.CodeQuotation  = q.CodeQuotation
+inner join Technician t t.CodeTechnician = a.CodeTechnician
+where a.CodeClient=@CodeClient and
+      a.CodeTechnician=@CodeTechnician and
+      q.StateQuotation='WAIT'
+end
+go
+-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+*Mostrar Todos los Contratos que no han sido Respondidos
+ por el Cliente 
+ 
+Create procedure ListContractBy_Cliente
+(@CodeClient char(10))
+as
+begin
+select c.CodeContract , q.TitleSubject
+from Contract c inner join Quotation q
+     on c.CodeQuotation = q.CodeQuotation
+where c.CodeClient=@CodeClient and c.StateContract='ANSWERED'
+order by c.CodeContract asc
+end 
+go
+-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+*Mostrar los Datos del Contrato para ver la Respuesta de este Tcenico
+si asistira si o no ?
+
+Create procedure ShowContract
+(@CodeContract char(10))
+as
+begin
+select AssistanceReason from Contract
+where CodeContract = @CodeContract
+end
+go
+
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

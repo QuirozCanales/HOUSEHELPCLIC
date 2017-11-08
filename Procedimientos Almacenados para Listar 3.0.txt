@@ -1,0 +1,36 @@
+*Para Listar Oficios 
+----------------------------------------------------
+----------------------------------------------------
+Select CodeJob ,NameJob from Job
+end
+go
+----------------------------------------------------
+----------------------------------------------------
+*Para Listar los Distritos
+
+Select CodeDistrict , NameDistrict from District
+end
+go
+
+----------------------------------------------------
+----------------------------------------------------
+*Para listar las especialidades segun el Oficio
+
+Create procedure ShowSpecialty
+(@CodeJob char(3))
+as
+begin
+Select e.CodeSpecialty , e.NameSpecialty
+from Especialty e inner join Job j
+on e.CodeJob=j.CodeJob
+where e.CodeJob=@CodeJob
+order by e.NameSpecialty asc
+end go
+
+----------------------------------------------------
+----------------------------------------------------
+Para listar los Tipos de Cotizacion
+
+Select CodeTypeQuotation , NameTypeQ from TypeQuotation
+end
+go

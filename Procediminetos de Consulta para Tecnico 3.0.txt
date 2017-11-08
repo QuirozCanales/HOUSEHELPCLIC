@@ -1,0 +1,50 @@
+*En listar todas las cotizaciones para el tecnico
+que pueda escojer una cotizacion
+
+Create procedure ShowQuotation_byJob
+(@CodeJob char(3) ,
+ @CodeTypeQuotation char(3))
+as
+begin 
+select q.CodeQuotation , q.TitleSubject , q.VisitCost
+from Quotation q inner join Job J
+     on j.CodeJob = q.CodeJob
+inner join TypeQuotation t
+     on t.CodeTypeQuotation =q.CodeTypeQuotation
+where q.CodeJob=@CodeJob and
+      q.CodeTypeQuotation=@CodeTypeQuotation and
+      q.StateQuotation='WAIT'
+END 
+GO
+----------------------------------------------------------------
+----------------------------------------------------------------
+* Mostrar la Cotizacion para que visualize el Tecnico
+
+create procedure ShowQuotation_forTechnician
+(@CodeQuotation char(10))
+as
+begin
+select q.CodeQuotation ,q.CodeClient , c.NameClient , c.LastNameClient
+        q.TitleSubject , q.DetailSubject , q.VisitCost , q.AddressSubject ,
+        q.StartSubject , q.EndSubject , q.DateSubject
+from Quotation q inner join Client c
+on c.CodeClient = q.CodeClient
+where q.CodeQuotation =@CodeQuotation
+end
+go
+---------------------------------------------------------------
+*Ver un listado de Contratos para que el Tecnico pueda
+dar una Respuesta de si asistir si o no ?
+
+create procedure ShowContract_forTechnician
+(@CodeTechnician char(10))
+as
+begin
+select c.CodeContract , c.TotalCostContract ,c.DateContract , q.TitleSubject
+from Contract c inner join Quotation q
+on c.CodeQuotation=q.CodeQuotation
+where c.CodeTechnician=@CodeTechnician
+and  c.StateContract='WAIT'
+order by c.CodeContract asc
+end
+go
