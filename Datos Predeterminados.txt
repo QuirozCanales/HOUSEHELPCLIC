@@ -1,0 +1,133 @@
+a,c,q,i
+Para District  ---->  :
+
+CodeDistrict   NameDistrict
+D01            Ancon
+D02            Ate
+D03            Barranco
+D04            Breña
+D05            Carabayllo
+D06            Chaclacayo
+D07            Chorrillos
+D08            Cieneguilla
+D09            Comas
+D10            El Angustino
+D11            Independencia
+D12            Jesus Maria
+D13            La Molina
+D14            La Victoria
+D15            Lima
+D16            Lince
+D17            Los Olivos
+D18            Lurigancho
+D19            Lurin
+D20            Magdalena del Mar
+D21            Miraflores
+D22            Pachacamac
+D23            Pucusana
+D24            Pueblo libre
+D25            Puente Piedra
+D26            Punta Hermosa
+D27            Punta Negra
+D28            Rimac
+D29            San Bartolo
+D30            San Borja
+D31            San Isidro
+D32            San Juan de Lurigancho
+D33            San Juan de Miraflores
+D34            San Luis
+D35            San Martin de Porres
+D36            San Miguel
+D37            San Anita
+D38            San Rosa
+D39            Santiago de Surco
+D40            Surquillo
+D41            Villa el Salvador
+D42            Villa Maria del Triunfo
+
+
+--------------------------------------------------------
+
+Para Job -----> Trabajos
+
+CodeJob   NameJob
+J01       Carpintero
+J02       Cerrajero
+J03       Albañil
+J04       Electricistas
+J05       Gasfintero
+J06       Pintor
+
+--------------------------------------------------------
+
+Para Especialty --- Especialidades
+
+CodeSpecialty   Code Job     NameSpecialty         DescriptionSpecialty
+E0001            J01         Pisos Laminados       Ninguno
+E0002            J01         Muebles               Ninguno
+E0003            J02         Puertas               Ninguno
+E0004            J02         Cerraduras            Ninguno
+E0005            J03         Acabados              Ninguno
+E0006            J03         Construcciones        Ninguno
+E0007            J04         Cableados             Ninguno
+E0008            J04         Fugas                 Ninguno
+E0009            J05         Tanques de Agua       Ninguno
+E0010            J05         Termas                Ninguno
+E0011            J06         Barnizados            Ninguno
+E0012            J06         Curado de Paredes     Ninguno
+
+--------------------------------------------------------
+
+Para Schedule ---> Horarios
+CodeSchedule      FrequencySchedule      DaysSchedule
+S000000001        Mañana                 Lunes
+S000000002        Mañana                 Martes
+S000000003        Mañana                 Miercoles
+S000000004        Mañana                 Jueves
+S000000005        Mañana                 Sabado
+S000000006        Mañana                 Domingo
+S000000007        Tarde                  Lunes
+S000000008        Noche                  Lunes
+
+
+--------------------------------------------------------
+
+Para DetailSchedule  ---> Detalle de Horarios
+CodeDetailSchedule    CodeTechnician    CodeSchedule   StartSchedule   EndSchedule
+DT00000001           T000000001          S000000001     10:00           12:00
+DT00000002           T000000001          S000000002     11:00           12:00
+DT00000003           T000000001          S000000003     11:00           12:00
+DT00000004           T000000002          S000000007     05:00           06:00
+DT00000005           T000000002          S000000008     08:00           09:00
+
+
+--------------------------------------------------------
+
+Para Technician -----> Tecnico
+
+CodeTechnician        CodeSpecialty     CodeDistrict   NameTech   LastNameTech    DniTech   AgeTech    CellPhoneTech    DescriptionTech  Passwordtech
+T000000001            E0006             D07            Alex       Quiroz          12345678    23        123456789       Ninguno          12345
+T000000002            E0006             D07            Javier     Canales         12345678    24        123456789       Ninguno          abcde
+T000000003            E0005             D07            Ricardo    Godinez         12345678    25        123456789       Ninguno          12345
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
